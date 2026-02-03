@@ -7,22 +7,18 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body { background-color: #f4f4f4; }
-        .unp-header { background-color: #FFD700; border-bottom: 5px solid #003366; padding: 10px; text-align: center; }
+        .unp-header { background-color: #FFD700; border-bottom: 5px solid #003366; padding: 10px; }
         .unp-title { font-weight: bold; color: #000; text-transform: uppercase; margin: 0; }
     </style>
 </head>
 <body>
 
-<div class="unp-header">
-    <div class="container-fluid">
-        <div class="row align-items-center">
-            <div class="col-md-2">
-                <img src="{{ asset('img/logo_unp.png') }}" alt="Logo" width="80">
-            </div>
-            <div class="col-md-8">
-                <h2 class="unp-title">Dashboard Analisis Data Kepegawaian</h2>
-                <h4 class="unp-title">Universitas Negeri Padang</h4>
-            </div>
+<div class="unp-header shadow">
+    <div class="container-fluid d-flex align-items-center">
+        <img src="/img/logo_unp.png" alt="Logo UNP" style="width: 60px; margin-right: 15px;">
+        <div>
+            <h2 class="unp-title h4">Dashboard Analisis Data Kepegawaian</h2>
+            <h4 class="unp-title h6">Universitas Negeri Padang</h4>
         </div>
     </div>
 </div>

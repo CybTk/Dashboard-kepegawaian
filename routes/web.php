@@ -7,5 +7,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// HARUS lewat controller agar variabel $units terisi
-Route::get('/dashboard', [KepegawaianController::class, 'index']);
+// Tambahkan ->name('dashboard') di akhir agar sinkron dengan JavaScript
+Route::get('/dashboard', [KepegawaianController::class, 'index'])->name('dashboard');
