@@ -2,14 +2,12 @@
 
 @section('content')
 <style>
-   
     html, body {
         height: 100%;
         margin: 0;
         overflow: hidden;
     }
 
-    
     .dashboard-wrapper {
         display: flex;
         height: calc(100vh - 60px); 
@@ -17,7 +15,6 @@
         overflow: hidden;
     }
 
-   
     .sidebar-sticky {
         width: 100%;
         height: 100%;
@@ -26,7 +23,6 @@
         border-right: 2px solid #000;
     }
 
-    
     .main-content-scroll {
         height: 100%;
         overflow-y: auto;
@@ -34,7 +30,6 @@
         background-color: #f8f9fa;
         flex: 1;
     }
-
 
     .main-content-scroll::-webkit-scrollbar, .sidebar-sticky::-webkit-scrollbar {
         width: 6px;
@@ -86,6 +81,17 @@
 
         <div class="main-content-scroll">
             
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold text-dark mb-0">Statistik Kepegawaian</h5>
+                <a href="{{ route('dashboard.export-pdf', ['unit_id' => 'all']) }}" id="linkExportPdf" class="btn btn-danger btn-sm fw-bold shadow-sm d-flex align-items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-pdf" viewBox="0 0 16 16">
+                      <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2M9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z"/>
+                      <path d="M4.603 12.087a.8.8 0 0 1-.438-.42c-.195-.388-.13-.776.08-1.102.198-.307.526-.568.897-.787a7.7 7.7 0 0 1 1.482-.645 20 20 0 0 0 1.062-2.227 7.3 7.3 0 0 1-.43-1.295c-.086-.4-.119-.796-.046-1.136.075-.354.274-.672.65-.823.192-.077.4-.12.602-.077a.7.7 0 0 1 .477.365c.088.192.12.399.113.608.02.505-.127 1.138-.457 2.022.255.603.562 1.13.89 1.577a9 9 0 0 1 1.96 1.142c.413.313.737.65.83 1.069.052.242.015.485-.114.663a.5.5 0 0 1-.184.162c-.164.085-.414.09-.67.043q-.325-.059-.699-.242c-.375-.182-.767-.463-1.147-.83-.302-.29-.56-.641-.78-1.005a20 20 0 0 1-1.37.31c-.35.06-.697.102-1.033.127-.512.716-.997 1.309-1.456 1.587-.244.148-.54.232-.822.204a.8.8 0 0 1-.65-.453ZM8.01 5.977c.106.134.204.303.266.52.062.213.082.433.074.653.012-.317.03-.751-.044-1.219-.015-.095-.041-.176-.073-.242a.7.7 0 0 0-.063-.125.1.1 0 0 0-.01-.011.23.23 0 0 0-.057.143c-.026.096-.022.196.007.281m-.98 4.822q.154-.018.332-.053c.243-.05.48-.12.714-.21a11 11 0 0 0-1.133-.518c-.244.113-.448.25-.615.408a1.2 1.2 0 0 0-.2.235c-.015.025-.03.056-.043.092a.2.2 0 0 0-.012.062c0 .02.008.036.017.045a.4.4 0 0 0 .148.075 1 1 0 0 0 .25.04c.163.01.32-.016.48-.046m2.915-1.571q.135.132.25.236c.15.136.313.253.488.35.15.084.28.143.393.178a.2.2 0 0 0 .114.015.2.2 0 0 0 .092-.044.2.2 0 0 0 .044-.061c.01-.02.016-.048.016-.08 0-.067-.023-.174-.06-.312a1.3 1.3 0 0 0-.173-.378 4 4 0 0 0-.41-.49 9 9 0 0 0-.74-.633 7 7 0 0 0-.154-.123l-.11-.083a.4c-.03-.024-.059-.046-.088-.068l-.066-.048q-.144.414-.28.847l-.04.122q.124.168.252.333"/>
+                    </svg>
+                    EXPORT PDF
+                </a>
+            </div>
+
             <div class="row g-2 mb-2">
                 <div class="col-md-3">
                     <div class="card p-3 shadow text-center h-100" style="background-color: #003366; color: white; border: 2px solid #000;">
@@ -279,7 +285,6 @@
 <script>
     Chart.register(ChartDataLabels);
     
-    
     function updateVisualChart(chartObj, labels, datasets) {
         const activeIndices = labels.map((_, i) => datasets.some(ds => ds.data[i] > 0));
         chartObj.data.labels = labels.filter((_, i) => activeIndices[i]);
@@ -289,7 +294,6 @@
         chartObj.update();
     }
 
-   
     function updatePangkatVisual(chartObj, labels, values) {
         if(!labels || !values) return;
         const filtered = labels.map((l, i) => ({ l, v: values[i] })).filter(item => item.v > 0);
@@ -356,24 +360,26 @@
         };
         refreshAgama(@json($agamaDosen), @json($agamaTendik));
 
-      
         document.querySelectorAll('.unit-item-link').forEach(item => {
             item.addEventListener('click', function(e) {
                 e.preventDefault();
                 const unitId = this.getAttribute('data-id');
                 document.getElementById('btnUnit').innerText = this.innerText;
                 
+                // Update Link Export PDF agar menyertakan unit_id yang baru terpilih
+                const exportBtn = document.getElementById('linkExportPdf');
+                const baseUrl = "{{ route('dashboard.export-pdf') }}";
+                exportBtn.setAttribute('href', `${baseUrl}?unit_id=${unitId}`);
+                
                 fetch(`{{ route('dashboard') }}?unit_id=${unitId}`, { headers: {'X-Requested-With': 'XMLHttpRequest'}})
                 .then(res => res.json()).then(data => {
                     if(data.success) {
-                       
                         document.getElementById('totalPegawaiText').innerText = data.total;
                         document.getElementById('valDosen').innerText = data.jml_dosen;
                         document.getElementById('valTendik').innerText = data.jml_tendik;
                         document.getElementById('pctDosen').innerText = data.persen_dosen;
                         document.getElementById('pctTendik').innerText = data.persen_tendik;
                         
-                       
                         catChart.data.datasets[0].data = data.chartData; catChart.update();
                         updateJK(data.genderStats);
                         eduDosenChart.data.labels = data.eduDosen.labels; eduDosenChart.data.datasets[0].data = data.eduDosen.values; eduDosenChart.update();
@@ -382,13 +388,11 @@
                         updateVisualChart(statusChart, data.statusPegawai.labels, [{data: data.statusPegawai.dosen}, {data: data.statusPegawai.tendik}]);
                         updateVisualChart(statusAktifChart, data.statusAktif.labels, [{data: data.statusAktif.dosen}, {data: data.statusAktif.tendik}]);
                         
-                       
                         if (data.pangkatStats) {
                             updatePangkatVisual(pnkDosenChart, data.pangkatStats.labels, data.pangkatStats.dosen);
                             updatePangkatVisual(pnkTendikChart, data.pangkatStats.labels, data.pangkatStats.tendik);
                         }
 
-                       
                         ['Dosen', 'Tendik'].forEach(k => {
                             const u = data.usiaStats[k] || { produktif: 0, non_produktif: 0, min_usia: 0, maks_usia: 0, rata_rata_usia: 0 };
                             document.getElementById(`usia_${k}_prod`).innerText = u.produktif;
@@ -398,7 +402,6 @@
                             document.getElementById(`usia_${k}_avg`).innerText = u.rata_rata_usia;
                         });
 
-                        // Jabatan
                         let jHtml = ''; data.jabatanStats.forEach(j => { jHtml += `<div class="col-md-6 mb-1"><div class="d-flex border border-dark rounded overflow-hidden shadow-sm" style="height: 30px;"><div class="bg-primary text-white d-flex align-items-center px-2 fw-bold flex-grow-1" style="font-size: 9px; background-color: #003366 !important; line-height: 1.1; overflow: hidden; text-overflow: ellipsis;">${(j.jabatan_fungsional || 'TIDAK TERSEDIA').toUpperCase()}</div><div class="bg-white d-flex align-items-center justify-content-center px-2 fw-bold border-start border-dark" style="min-width: 50px; font-size: 11px;">${j.jumlah_orang}</div></div></div>`; });
                         document.getElementById('jabatanContainer').innerHTML = jHtml;
                     }
